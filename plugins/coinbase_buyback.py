@@ -29,7 +29,7 @@ from electrum.util import appdata_dir
 from electrum.util import format_satoshis
 from electrum_gui.qt import ElectrumGui
 
-SATOSHIS_PER_BTC = float(100000000)
+SATOSHIS_PER_LTC = float(100000000)
 COINBASE_ENDPOINT = 'https://coinbase.com'
 SCOPE = 'buy'
 REDIRECT_URI = 'urn:ietf:wg:oauth:2.0:oob'
@@ -75,7 +75,7 @@ def propose_rebuy_qt(amount):
     box.setFixedSize(200, 200)
 
     credentials = read_local_oauth_credentials()
-    questionText = _('Rebuy ') + format_satoshis(amount) + _(' BTC?')
+    questionText = _('Rebuy ') + format_satoshis(amount) + _(' LTC?')
     if credentials:
         credentials.refresh()
     if credentials and not credentials.invalid:
@@ -96,7 +96,7 @@ def do_buy(credentials, amount):
     conn = httplib.HTTPSConnection('coinbase.com')
     credentials.authorize(conn)
     params = {
-        'qty': float(amount)/SATOSHIS_PER_BTC,
+        'qty': float(amount)/SATOSHIS_PER_LTC,
         'agree_btc_amount_varies': False
     }
     resp = conn.auth_request('POST', '/api/v1/buys', urlencode(params), None)
@@ -115,7 +115,7 @@ def do_buy(credentials, amount):
 
 def get_coinbase_total_price(credentials, amount):
     conn = httplib.HTTPSConnection('coinbase.com')
-    params={'qty': amount/SATOSHIS_PER_BTC}
+    params={'qty': amount/SATOSHIS_PER_LTC}
     conn.request('GET', '/api/v1/prices/buy?' + urlencode(params))
     resp = conn.getresponse()
     if resp.status != 200:

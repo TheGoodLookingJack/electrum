@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 #
-# Electrum - lightweight Bitcoin client
+# Electrum - lightweight Litecoin client
 # Copyright (C) 2011 thomasv@gitorious
 #
 # This program is free software: you can redistribute it and/or modify
@@ -60,7 +60,7 @@ hash_encode = lambda x: x[::-1].encode('hex')
 hash_decode = lambda x: x.decode('hex')[::-1]
 
 hmac_sha_512 = lambda x,y: hmac.new(x, y, hashlib.sha512).digest()
-mnemonic_hash = lambda x: hmac_sha_512("Bitcoin mnemonic", x).encode('hex')
+mnemonic_hash = lambda x: hmac_sha_512("Litecoin mnemonic", x).encode('hex')
 
 # pywallet openssl private key implementation
 
@@ -127,7 +127,7 @@ def public_key_to_bc_address(public_key):
     h160 = hash_160(public_key)
     return hash_160_to_bc_address(h160)
 
-def hash_160_to_bc_address(h160, addrtype = 0):
+def hash_160_to_bc_address(h160, addrtype = 48):
     vh160 = chr(addrtype) + h160
     h = Hash(vh160)
     addr = vh160 + h[0:4]
@@ -164,7 +164,7 @@ def b58encode(v):
         long_value = div
     result = __b58chars[long_value] + result
 
-    # Bitcoin does a little leading-zero-compression:
+    # Litecoin does a little leading-zero-compression:
     # leading 0-bytes in the input become leading-1s
     nPad = 0
     for c in v:
@@ -216,12 +216,12 @@ def DecodeBase58Check(psz):
 def PrivKeyToSecret(privkey):
     return privkey[9:9+32]
 
-def SecretToASecret(secret, compressed=False, addrtype=0):
+def SecretToASecret(secret, compressed=False, addrtype=48):
     vchIn = chr((addrtype+128)&255) + secret
     if compressed: vchIn += '\01'
     return EncodeBase58Check(vchIn)
 
-def ASecretToSecret(key, addrtype=0):
+def ASecretToSecret(key, addrtype=48):
     vch = DecodeBase58Check(key)
     if vch and vch[0] == chr((addrtype+128)&255):
         return vch[1:]
@@ -289,7 +289,7 @@ def msg_magic(message):
     varint = var_int(len(message))
     encoded_varint = "".join([chr(int(varint[i:i+2], 16)) for i in xrange(0, len(varint), 2)])
 
-    return "\x18Bitcoin Signed Message:\n" + encoded_varint + message
+    return "\x18Litecoin Signed Message:\n" + encoded_varint + message
 
 
 def verify_message(address, signature, message):
@@ -376,11 +376,15 @@ BIP32_PRIME = 0x80000000
 
 def bip32_init(seed):
     import hmac
-    seed = seed.decode('hex')        
-    I = hmac.new("Bitcoin seed", seed, hashlib.sha512).digest()
+    print "USING SEED: " + (seed) 
+    seed = seed.decode('hex')     
+
+    I = hmac.new("Litecoin seed", seed, hashlib.sha512).digest()
 
     master_secret = I[0:32]
+    print "MASTER SECRET: " + master_secret.encode('hex')
     master_chain = I[32:]
+    raise SystemExit
 
     K, K_compressed = get_pubkeys_from_secret(master_secret)
     return master_secret, master_chain, K, K_compressed

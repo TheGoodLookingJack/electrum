@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Electrum - lightweight Bitcoin client
+# Electrum - lightweight Litecoin client
 # Copyright (C) 2012 thomasv@gitorious
 #
 # This program is free software: you can redistribute it and/or modify
@@ -444,7 +444,7 @@ class ElectrumWindow(QMainWindow):
 
     def show_about(self):
         QMessageBox.about(self, "Electrum",
-            _("Version")+" %s" % (self.wallet.electrum_version) + "\n\n" + _("Electrum's focus is speed, with low resource usage and simplifying Bitcoin. You do not need to perform regular backups, because your wallet can be recovered from a secret phrase that you can memorize or write on paper. Startup times are instant because it operates in conjunction with high-performance servers that handle the most complicated parts of the Bitcoin system."))
+            _("Version")+" %s" % (self.wallet.electrum_version) + "\n\n" + _("Electrum's focus is speed, with low resource usage and simplifying Litecoin. You do not need to perform regular backups, because your wallet can be recovered from a secret phrase that you can memorize or write on paper. Startup times are instant because it operates in conjunction with high-performance servers that handle the most complicated parts of the Litecoin system."))
 
     def show_report_bug(self):
         QMessageBox.information(self, "Electrum - " + _("Reporting Bugs"),
@@ -523,7 +523,7 @@ class ElectrumWindow(QMainWindow):
 
     def base_unit(self):
         assert self.decimal_point in [5,8]
-        return "BTC" if self.decimal_point == 8 else "mBTC"
+        return "LTC" if self.decimal_point == 8 else "mLTC"
 
 
     def update_status(self):
@@ -736,7 +736,7 @@ class ElectrumWindow(QMainWindow):
         grid.addWidget(QLabel(_('Pay to')), 1, 0)
         grid.addWidget(self.payto_e, 1, 1, 1, 3)
 
-        grid.addWidget(HelpButton(_('Recipient of the funds.') + '\n\n' + _('You may enter a Bitcoin address, a label from your list of contacts (a list of completions will be proposed), or an alias (email-like address that forwards to a Bitcoin address)')), 1, 4)
+        grid.addWidget(HelpButton(_('Recipient of the funds.') + '\n\n' + _('You may enter a Litecoin address, a label from your list of contacts (a list of completions will be proposed), or an alias (email-like address that forwards to a Litecoin address)')), 1, 4)
 
         completer = QCompleter()
         completer.setCaseSensitivity(False)
@@ -771,7 +771,7 @@ class ElectrumWindow(QMainWindow):
         grid.addWidget(QLabel(_('Fee')), 5, 0)
         grid.addWidget(self.fee_e, 5, 1, 1, 2)
         grid.addWidget(HelpButton(
-                _('Bitcoin transactions are in general not free. A transaction fee is paid by the sender of the funds.') + '\n\n'\
+                _('Litecoin transactions are in general not free. A transaction fee is paid by the sender of the funds.') + '\n\n'\
                     + _('The amount of fee can be decided freely by the sender. However, transactions with low fees take more time to be processed.') + '\n\n'\
                     + _('A suggested fee is automatically added to this field. You may override it. The suggested fee increases with the size of the transaction.')), 5, 3)
 
@@ -876,7 +876,7 @@ class ElectrumWindow(QMainWindow):
         to_address = m.group(2) if m else r
 
         if not is_valid(to_address):
-            QMessageBox.warning(self, _('Error'), _('Invalid Bitcoin Address') + ':\n' + to_address, _('OK'))
+            QMessageBox.warning(self, _('Error'), _('Invalid Litecoin Address') + ':\n' + to_address, _('OK'))
             return
 
         try:
@@ -945,7 +945,7 @@ class ElectrumWindow(QMainWindow):
         address, amount, label, message, signature, identity, url = util.parse_url(url)
 
         try:
-            if amount and self.base_unit() == 'mBTC': amount = str( 1000* Decimal(amount))
+            if amount and self.base_unit() == 'mLTC': amount = str( 1000* Decimal(amount))
             elif amount: amount = str(Decimal(amount))
         except Exception:
             amount = "0.0"
@@ -2071,7 +2071,7 @@ class ElectrumWindow(QMainWindow):
         if not self.config.is_modifiable('fee_per_kb'):
             for w in [fee_e, fee_label]: w.setEnabled(False)
 
-        units = ['BTC', 'mBTC']
+        units = ['LTC', 'mLTC']
         unit_label = QLabel(_('Base unit') + ':')
         grid.addWidget(unit_label, 3, 0)
         unit_combo = QComboBox()
@@ -2079,7 +2079,7 @@ class ElectrumWindow(QMainWindow):
         unit_combo.setCurrentIndex(units.index(self.base_unit()))
         grid.addWidget(unit_combo, 3, 1)
         grid.addWidget(HelpButton(_('Base unit of your wallet.')\
-                                             + '\n1BTC=1000mBTC.\n' \
+                                             + '\n1LTC=1000mLTC.\n' \
                                              + _(' These settings affects the fields in the Send tab')+' '), 3, 2)
 
         usechange_cb = QCheckBox(_('Use change addresses'))
@@ -2127,7 +2127,7 @@ class ElectrumWindow(QMainWindow):
 
         unit_result = units[unit_combo.currentIndex()]
         if self.base_unit() != unit_result:
-            self.decimal_point = 8 if unit_result == 'BTC' else 5
+            self.decimal_point = 8 if unit_result == 'LTC' else 5
             self.config.set_key('decimal_point', self.decimal_point, True)
             self.update_history_tab()
             self.update_status()

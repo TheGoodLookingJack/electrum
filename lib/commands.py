@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Electrum - lightweight Bitcoin client
+# Electrum - lightweight Litecoin client
 # Copyright (C) 2011 thomasv@gitorious
 #
 # This program is free software: you can redistribute it and/or modify
@@ -240,16 +240,16 @@ class Commands:
 
         for to_address, amount in outputs:
             if not is_valid(to_address):
-                raise Exception("Invalid Bitcoin address", to_address)
+                raise Exception("Invalid Litecoin address", to_address)
 
         if change_addr:
             if not is_valid(change_addr):
-                raise Exception("Invalid Bitcoin address", change_addr)
+                raise Exception("Invalid Litecoin address", change_addr)
 
         if domain is not None:
             for addr in domain:
                 if not is_valid(addr):
-                    raise Exception("invalid Bitcoin address", addr)
+                    raise Exception("invalid Litecoin address", addr)
             
                 if not self.wallet.is_mine(addr):
                     raise Exception("address not in wallet", addr)

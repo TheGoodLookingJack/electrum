@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Electrum - lightweight Bitcoin client
+# Electrum - lightweight Litecoin client
 # Copyright (C) 2012 thomasv@ecdsa.org
 #
 # This program is free software: you can redistribute it and/or modify

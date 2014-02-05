@@ -79,7 +79,7 @@ def main(address):
     network.start(wait=True)
     c, u = get_addr_balance(network, address)
 
-    print("Balance - confirmed: %d (%.8f BTC), unconfirmed: %d (%.8f BTC)" %
+    print("Balance - confirmed: %d (%.8f LTC), unconfirmed: %d (%.8f LTC)" %
           (c, c / 100000000., u, u / 100000000.))
 
 if __name__ == "__main__":
