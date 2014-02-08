@@ -33,7 +33,7 @@ class VersionGetter(threading.Thread):
         
     def run(self):
         try:
-            con = httplib.HTTPConnection('electrum.org', 80, timeout=5)
+            con = httplib.HTTPConnection('electrum-lite.org', 80, timeout=5)
             con.request("GET", "/version")
             res = con.getresponse()
         except socket.error as msg:
@@ -90,16 +90,16 @@ class UpdateLabel(QLabel):
         self.dialog.done(0)
   
     def open_website(self):
-        webbrowser.open("http://electrum.org/download.html")
+        webbrowser.open("http://electrum-lite.org/download.html")
         self.dialog.done(0)
 
     def mouseReleaseEvent(self, event):
         dialog = QDialog(self)
-        dialog.setWindowTitle(_('Electrum update'))
+        dialog.setWindowTitle(_('Electrum Lite update'))
         dialog.setModal(1)
 
         main_layout = QGridLayout()
-        main_layout.addWidget(QLabel(_("A new version of Electrum is available:")+" " + self.latest_version), 0,0,1,3)
+        main_layout.addWidget(QLabel(_("A new version of Electrum Lite is available:")+" " + self.latest_version), 0,0,1,3)
         
         ignore_version = QPushButton(_("Ignore this version"))
         ignore_version.clicked.connect(self.ignore_this_version)

@@ -371,16 +371,16 @@ if __name__ == '__main__':
     assert(parse_uri('1Marek48fwU7mugmSe186do2QpUkBnpzSN') ==
            {'address': '1Marek48fwU7mugmSe186do2QpUkBnpzSN'})
 
-    assert(parse_uri('bitcoin://1Marek48fwU7mugmSe186do2QpUkBnpzSN') ==
+    assert(parse_uri('litecoin://1Marek48fwU7mugmSe186do2QpUkBnpzSN') ==
            {'address': '1Marek48fwU7mugmSe186do2QpUkBnpzSN'})
     
-    assert(parse_uri('bitcoin:1Marek48fwU7mugmSe186do2QpUkBnpzSN') ==
+    assert(parse_uri('litecoin:1Marek48fwU7mugmSe186do2QpUkBnpzSN') ==
            {'address': '1Marek48fwU7mugmSe186do2QpUkBnpzSN'})
     
-    assert(parse_uri('bitcoin:1Marek48fwU7mugmSe186do2QpUkBnpzSN?amount=10') ==
+    assert(parse_uri('litecoin:1Marek48fwU7mugmSe186do2QpUkBnpzSN?amount=10') ==
            {'amount': '10', 'address': '1Marek48fwU7mugmSe186do2QpUkBnpzSN'})
     
-    assert(parse_uri('bitcoin:1Marek48fwU7mugmSe186do2QpUkBnpzSN?amount=10&label=slush&message=Small%20tip%20to%20slush') ==
+    assert(parse_uri('litecoin:1Marek48fwU7mugmSe186do2QpUkBnpzSN?amount=10&label=slush&message=Small%20tip%20to%20slush') ==
            {'amount': '10', 'label': 'slush', 'message': 'Small tip to slush', 'address': '1Marek48fwU7mugmSe186do2QpUkBnpzSN'})
     
     
