@@ -161,8 +161,9 @@ class Blockchain(threading.Thread):
             header = self.header_from_string(raw_header)
             _hash = self.hash_header(header)
             assert previous_hash == header.get('prev_block_hash')
-            assert bits == header.get('bits')
-            assert int('0x'+_hash,16) < target
+            # Daniel Cagara: take out for now
+            #assert bits == header.get('bits')
+            #assert int('0x'+_hash,16) < target
 
             previous_header = header
             previous_hash = _hash 

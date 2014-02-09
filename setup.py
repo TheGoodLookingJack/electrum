@@ -115,9 +115,9 @@ setup(
         'electrum_plugins.virtualkeyboard',
     ],
     description="Lightweight Litecoin Wallet",
-    author="ecdsa",
-    author_email="ecdsa@github",
+    author="Daniel Cagara",
+    author_email="contact@electrum-lite.org",
     license="GNU GPLv3",
-    url="http://electrum.org",
+    url="http://electrum-lite.org",
     long_description="""Lightweight Litecoin Wallet"""
 )
