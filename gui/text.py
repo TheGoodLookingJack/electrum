@@ -2,10 +2,10 @@ import curses, datetime, locale
 from decimal import Decimal
 _ = lambda x:x
 #from i18n import _
-from electrum.util import format_satoshis, set_verbosity
-from electrum.bitcoin import is_valid
+from electrum_lite.util import format_satoshis, set_verbosity
+from electrum_lite.bitcoin import is_valid
 
-from electrum import Wallet, WalletStorage
+from electrum_lite import Wallet, WalletStorage
 
 import tty, sys
 

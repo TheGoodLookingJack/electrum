@@ -21,7 +21,7 @@ import time, thread, sys, socket, os
 import urllib2,json
 import Queue
 import sqlite3
-from electrum import Wallet, WalletStorage, SimpleConfig, Network, set_verbosity
+from electrum_lite import Wallet, WalletStorage, SimpleConfig, Network, set_verbosity
 set_verbosity(False)
 
 import ConfigParser
@@ -218,7 +218,7 @@ if __name__ == '__main__':
         cur.execute("""UPDATE electrum_payments set paid=0 WHERE expires_at < CURRENT_TIMESTAMP and paid is NULL;""")
 
         # do callback for addresses that received payment or expired
-        cur.execute("""SELECT address, paid from electrum_payments WHERE paid is not NULL and processed is NULL;""")
+        cur.execute("""SELECT address, paid from electrum_lite_payments WHERE paid is not NULL and processed is NULL;""")
         data = cur.fetchall()
         for item in data:
             address, paid = item

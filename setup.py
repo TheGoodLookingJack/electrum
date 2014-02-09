@@ -16,8 +16,8 @@ if sys.version_info[:3] < (2, 6, 0):
     sys.exit("Error: Electrum requires Python version >= 2.6.0...")
 
 usr_share = '/usr/share'
-if not os.access(usr_share, os.W_OK):
-    usr_share = os.getenv("XDG_DATA_HOME", os.path.join(os.getenv("HOME"), ".local", "share"))
+#if not os.access(usr_share, os.W_OK):
+#    usr_share = os.getenv("XDG_DATA_HOME", os.path.join(os.getenv("HOME"), ".local", "share"))
 
 data_files = []
 if (len(sys.argv) > 1 and (sys.argv[1] == "sdist")) or (platform.system() != 'Windows' and platform.system() != 'Darwin'):

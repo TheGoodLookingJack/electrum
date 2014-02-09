@@ -49,7 +49,7 @@ if __builtin__.use_local_modules:
     imp.load_module('electrum_lite', *imp.find_module('lib'))
     imp.load_module('electrum_lite_gui', *imp.find_module('gui'))
 
-from electrum import *  # todo: import * is generally frowned upon. should import just what is used
+from electrum_lite import *  # todo: import * is generally frowned upon. should import just what is used
 
 
 # get password routine
@@ -160,7 +160,7 @@ if __name__ == '__main__':
         if gui_name in ['lite', 'classic']:
             gui_name = 'qt'
         try:
-            gui = __import__('electrum_gui.' + gui_name, fromlist=['electrum_gui'])
+            gui = __import__('electrum_lite_gui.' + gui_name, fromlist=['electrum_gui'])
         except ImportError:
             traceback.print_exc(file=sys.stdout)
             sys.exit()

@@ -17,8 +17,8 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import sys, time, datetime, re, threading
-from electrum.i18n import _, set_language
-from electrum.util import print_error, print_msg
+from electrum_lite.i18n import _, set_language
+from electrum_lite.util import print_error, print_msg
 import os.path, json, ast, traceback
 import shutil
 import StringIO
@@ -29,19 +29,19 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 import PyQt4.QtCore as QtCore
 
-from electrum.bitcoin import MIN_RELAY_TX_FEE, is_valid
-from electrum.plugins import run_hook
+from electrum_lite.bitcoin import MIN_RELAY_TX_FEE, is_valid
+from electrum_lite.plugins import run_hook
 
 import icons_rc
 
-from electrum.wallet import format_satoshis
-from electrum import Transaction
-from electrum import mnemonic
-from electrum import util, bitcoin, commands, Interface, Wallet
-from electrum import SimpleConfig, Wallet, WalletStorage
+from electrum_lite.wallet import format_satoshis
+from electrum_lite import Transaction
+from electrum_lite import mnemonic
+from electrum_lite import util, bitcoin, commands, Interface, Wallet
+from electrum_lite import SimpleConfig, Wallet, WalletStorage
 
 
-from electrum import bmp, pyqrnative
+from electrum_lite import bmp, pyqrnative
 
 from amountedit import AmountEdit
 from network_dialog import NetworkDialog
@@ -62,7 +62,7 @@ elif platform.system() == 'Darwin':
 else:
     MONOSPACE_FONT = 'monospace'
 
-from electrum import ELECTRUM_VERSION
+from electrum_lite import ELECTRUM_VERSION
 import re
 
 from util import *
@@ -2049,7 +2049,7 @@ class ElectrumWindow(QMainWindow):
         lang_label=QLabel(_('Language') + ':')
         grid.addWidget(lang_label, 1, 0)
         lang_combo = QComboBox()
-        from electrum.i18n import languages
+        from electrum_lite.i18n import languages
         lang_combo.addItems(languages.values())
         try:
             index = languages.keys().index(self.config.get("language",''))
@@ -2164,7 +2164,7 @@ class ElectrumWindow(QMainWindow):
 
 
     def plugins_dialog(self):
-        from electrum.plugins import plugins
+        from electrum_lite.plugins import plugins
 
         d = QDialog(self)
         d.setWindowTitle(_('Electrum Lite Plugins'))

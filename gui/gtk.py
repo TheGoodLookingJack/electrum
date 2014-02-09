@@ -26,18 +26,18 @@ import pygtk
 pygtk.require('2.0')
 import gtk, gobject
 from decimal import Decimal
-from electrum.util import print_error
-from electrum.bitcoin import is_valid
-from electrum import mnemonic, pyqrnative, WalletStorage, Wallet
+from electrum_lite.util import print_error
+from electrum_lite.bitcoin import is_valid
+from electrum_lite import mnemonic, pyqrnative, WalletStorage, Wallet
 
 gtk.gdk.threads_init()
 APP_NAME = "Electrum"
 import platform
 MONOSPACE_FONT = 'Lucida Console' if platform.system() == 'Windows' else 'monospace'
 
-from electrum.util import format_satoshis
-from electrum.network import DEFAULT_SERVERS
-from electrum.bitcoin import MIN_RELAY_TX_FEE
+from electrum_lite.util import format_satoshis
+from electrum_lite.network import DEFAULT_SERVERS
+from electrum_lite.bitcoin import MIN_RELAY_TX_FEE
 
 def numbify(entry, is_int = False):
     text = entry.get_text().strip()
