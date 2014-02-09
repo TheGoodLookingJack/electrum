@@ -50,6 +50,7 @@ class TxVerifier(threading.Thread):
                 if conf <= 0: timestamp = None
 
             elif tx in self.transactions:
+                print "get_confirmations called without being in self.transactions"
                 conf = -1
                 timestamp = None
 

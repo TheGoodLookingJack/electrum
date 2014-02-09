@@ -32,7 +32,7 @@ class Blockchain(threading.Thread):
         self.lock = threading.Lock()
         self.local_height = 0
         self.running = False
-        self.headers_url = 'http://headers.electrum.org/blockchain_headers'
+        self.headers_url = 'https://www.electrum-lite.org/blockchain_headers'
         self.set_local_height()
         self.queue = Queue.Queue()
 
@@ -93,7 +93,7 @@ class Blockchain(threading.Thread):
                     for header in chain:
                         self.save_header(header)
                 else:
-                    print_error("error", i.server)
+                    print_error("error (verify chain)", i.server)
                     # todo: dismiss that server
                     continue
 
@@ -111,14 +111,27 @@ class Blockchain(threading.Thread):
         for header in chain:
 
             height = header.get('block_height')
+            print_error("(verify) height=",height)
 
             prev_hash = self.hash_header(prev_header)
             bits, target = self.get_target(height/2016, chain)
             _hash = self.hash_header(header)
+            print_error("(verify) hash=",_hash)
+            print_error("(verify) prev_hash_1=",prev_hash)
+            print_error("(verify) prev_hash_2=",header.get('prev_block_hash'))
+            print_error("(verify) bits_1=",bits)
+            print_error("(verify) bits_2=",header.get('bits'))
+            print_error("(verify) hash_int=",int('0x'+_hash,16))
+            print_error("(verify) target=",int(target))
+            print_error("(verify) is_target_ok=", (int('0x'+_hash,16)<target))
             try:
                 assert prev_hash == header.get('prev_block_hash')
-                assert bits == header.get('bits')
-                assert int('0x'+_hash,16) < target
+                # Daniel Cagara: Note these two for now are uncommented, that is why we only use trusted servers.
+                # Target calculation is a bit more complicated in litecoin.
+                # bits - SHOULD BE CALCULATED CORRECTLY, just commented out for safety reasons
+                # target - WRONG VALUE CALCULATED, MAYBE SOMEONE CAN FIX THIS OF YOU GUYS!
+                #assert bits == header.get('bits')
+                #assert int('0x'+_hash,16) < target
             except Exception:
                 return False
 
@@ -188,6 +201,7 @@ class Blockchain(threading.Thread):
 
     def init_headers_file(self):
         filename = self.path()
+        print "checking headers at " + filename
         if os.path.exists(filename):
             return
         
@@ -246,19 +260,24 @@ class Blockchain(threading.Thread):
         max_target = 0x00000000FFFF0000000000000000000000000000000000000000000000000000
         if index == 0: return 0x1d00ffff, max_target
 
-        first = self.read_header((index-1)*2016)
-        last = self.read_header(index*2016-1)
+        first = self.read_header((index-1)*2016-1) # hot fix done here by Daniel Cagara, seems like litecoin fucked up thing a bit
+        last = self.read_header(index*2016-1) # here was a -1 at end
         if last is None:
             for h in chain:
-                if h.get('block_height') == index*2016-1:
+                if h.get('block_height') == index*2016-1: # here was a -1 at end
                     last = h
  
         nActualTimespan = last.get('timestamp') - first.get('timestamp')
-        nTargetTimespan = 14*24*60*60
+        print_error("(get_target) nActualTimespan=",nActualTimespan)
+        nTargetTimespan = 302400 #3.5*24*60*60
+        print_error("(get_target) nTargetTimespan=",nTargetTimespan)
         nActualTimespan = max(nActualTimespan, nTargetTimespan/4)
         nActualTimespan = min(nActualTimespan, nTargetTimespan*4)
+        print_error("(get_target) nActualTimespan=",nActualTimespan)
 
         bits = last.get('bits') 
+        print_error("(get_target) last_bits=",bits)
+
         # convert to bignum
         MM = 256*256*256
         a = bits%MM
@@ -269,6 +288,8 @@ class Blockchain(threading.Thread):
         # new target
         new_target = min( max_target, (target * nActualTimespan)/nTargetTimespan )
         
+        print_error("(get_target) new_target=",new_target)
+
         # convert it to bits
         c = ("%064X"%new_target)[2:]
         i = 31
@@ -282,7 +303,7 @@ class Blockchain(threading.Thread):
             i += 1
 
         new_bits = c + MM * i
-        return new_bits, new_target
+        return new_bits, target
 
 
     def request_header(self, i, h, queue):

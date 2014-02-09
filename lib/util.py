@@ -18,6 +18,7 @@ def set_verbosity(b):
     is_verbose = b
 
 def print_error(*args):
+    is_verbose = True
     if not is_verbose: return
     args = [str(item) for item in args]
     sys.stderr.write(" ".join(args) + "\n")
