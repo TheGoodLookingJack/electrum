@@ -99,13 +99,16 @@ class Interface(threading.Thread):
         self.bytes_received = 0
         self.is_connected = False
         self.poll_interval = 1
-
+        self.stop = False
+        self.scheduler_active = False
         self.debug = False # dump network messages. can be changed at runtime using the console
 
         #json
         self.message_id = 0
         self.unanswered_requests = {}
         self.pending_transactions_for_notifications= []
+
+        self.pending_outbuf = []
 
         # parse server
         self.server = server
@@ -128,8 +131,21 @@ class Interface(threading.Thread):
             self.proxy_mode = proxy_modes.index(self.proxy["mode"]) + 1
 
 
+  
 
-
+    def retry_sending_messages(self): 
+        print_error("(scheduler) fired.")
+        self.scheduler_active = True
+        # Now only reschedule if we are not connected
+        if self.is_connected == False:
+            threading.Timer(0.5, self.retry_sending_messages).start()
+        else:
+            for j in self.pending_outbuf:
+                message = j["msg"]
+                callback = j["callback"]
+                self.send(message,callback)
+            self.pending_outbuf = []
+            self.scheduler_active = False
 
     def queue_json_response(self, c):
 
@@ -528,7 +544,14 @@ class Interface(threading.Thread):
                         self.subscriptions[callback].append(message)
 
         if not self.is_connected: 
-            print_error("interface: trying to send while not connected")
+            resend = {"msg":messages, "callback":callback}
+            self.pending_outbuf.append(resend)
+
+            # Daniel Cagara: Start Scheduler if not yet done
+            if self.scheduler_active == False:
+                threading.Timer(0.5, self.retry_sending_messages).start()
+
+            print_error("interface: trying to send while not connected (QUEUED!), msg=",messages)
             return
 
         if self.protocol in 'st':
@@ -566,7 +589,7 @@ class Interface(threading.Thread):
         if self.is_connected and self.protocol in 'st' and self.s:
             self.s.shutdown(socket.SHUT_RDWR)
             self.s.close()
-
+        self.stop = true
         self.is_connected = False
 
 
