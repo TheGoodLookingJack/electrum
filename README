@@ -1,9 +1,9 @@
 Electrum - lightweight Litecoin client
 
 Licence: GNU GPL v3
-Author: thomasv@bitcointalk.org
+Author: Daniel Cagara <contact@electrum-lite.org>
 Language: Python
-Homepage: http://electrum.org/
+Homepage: http://electrum-lite.org/
 
 
 == INSTALL ==
@@ -15,7 +15,7 @@ Homepage: http://electrum.org/
 
 To start Electrum in GUI mode, type:
 
-  electrum
+  electrum-lite
 
 == HELP ==
 
