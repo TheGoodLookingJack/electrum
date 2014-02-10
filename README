@@ -1,4 +1,4 @@
-Electrum - lightweight Litecoin client
+Electrum Light - a lightweight Litecoin client
 
 Licence: GNU GPL v3
 Author: Daniel Cagara <contact@electrum-lite.org>
@@ -38,8 +38,3 @@ On Mac OS X:
   ARCHFLAGS="-arch i386 -arch x86_64" sudo python setup-release.py py2app --includes sip
 
   sudo hdiutil create -fs HFS+ -volname "Electrum" -srcfolder dist/Electrum.app dist/electrum-VERSION-macosx.dmg
-
-
-== BROWSER CONFIGURATION ==
-
-See http://electrum.org/bitcoin_URIs.html
