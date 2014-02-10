@@ -115,14 +115,14 @@ class Blockchain(threading.Thread):
 
             prev_hash = self.hash_header(prev_header)
             bits, target = self.get_target(height/2016, chain)
-            _hash = self.hash_header(header)
+            _hash = self.hash_headerScrypt(header)
             print_error("(verify) hash=",_hash)
             print_error("(verify) prev_hash_1=",prev_hash)
             print_error("(verify) prev_hash_2=",header.get('prev_block_hash'))
             print_error("(verify) bits_1=",bits)
             print_error("(verify) bits_2=",header.get('bits'))
             print_error("(verify) hash_int=",int('0x'+_hash,16))
-            print_error("(verify) target=",int(target))
+            print_error("(verify) target=",hex(target))
             print_error("(verify) is_target_ok=", (int('0x'+_hash,16)<target))
             try:
                 assert prev_hash == header.get('prev_block_hash')
@@ -130,8 +130,8 @@ class Blockchain(threading.Thread):
                 # Target calculation is a bit more complicated in litecoin.
                 # bits - SHOULD BE CALCULATED CORRECTLY, just commented out for safety reasons
                 # target - WRONG VALUE CALCULATED, MAYBE SOMEONE CAN FIX THIS OF YOU GUYS!
-                #assert bits == header.get('bits')
-                #assert int('0x'+_hash,16) < target
+                assert bits == header.get('bits')
+                assert int('0x'+_hash,16) < target
             except Exception:
                 return False
 
@@ -159,11 +159,11 @@ class Blockchain(threading.Thread):
             height = index*2016 + i
             raw_header = data[i*80:(i+1)*80]
             header = self.header_from_string(raw_header)
-            _hash = self.hash_header(header)
+            _hash = self.hash_headerScrypt(header)
             assert previous_hash == header.get('prev_block_hash')
             # Daniel Cagara: take out for now
-            #assert bits == header.get('bits')
-            #assert int('0x'+_hash,16) < target
+            assert bits == header.get('bits')
+            assert int('0x'+_hash,16) < target
 
             previous_header = header
             previous_hash = _hash 
@@ -194,6 +194,10 @@ class Blockchain(threading.Thread):
         h['nonce'] = hex_to_int(s[76:80])
         return h
 
+    def hash_headerScrypt(self, header):
+        import ltc_scrypt
+        return rev_hex(ltc_scrypt.getPoWHash(self.header_to_string(header).decode('hex')).encode('hex'))
+        
     def hash_header(self, header):
         return rev_hex(Hash(self.header_to_string(header).decode('hex')).encode('hex'))
 
@@ -258,7 +262,7 @@ class Blockchain(threading.Thread):
 
     def get_target(self, index, chain=[]):
 
-        max_target = 0x00000000FFFF0000000000000000000000000000000000000000000000000000
+        max_target = 0x00000FFFF0000000000000000000000000000000000000000000000000000000
         if index == 0: return 0x1d00ffff, max_target
 
         first = self.read_header((index-1)*2016-1) # hot fix done here by Daniel Cagara, seems like litecoin fucked up thing a bit
@@ -285,11 +289,11 @@ class Blockchain(threading.Thread):
         if a < 0x8000:
             a *= 256
         target = (a) * pow(2, 8 * (bits/MM - 3))
-
+        print_error("(get_target) target=",hex(target))
         # new target
         new_target = min( max_target, (target * nActualTimespan)/nTargetTimespan )
         
-        print_error("(get_target) new_target=",new_target)
+        print_error("(get_target) new_target=",hex(new_target))
 
         # convert it to bits
         c = ("%064X"%new_target)[2:]
