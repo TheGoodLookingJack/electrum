@@ -33,8 +33,8 @@ if (len(sys.argv) > 1 and (sys.argv[1] == "sdist")) or (platform.system() != 'Wi
             data_files.append((os.path.join(usr_share, 'locale/%s/LC_MESSAGES' % lang), ['locale/%s/LC_MESSAGES/electrum-lite.mo' % lang]))
 
 appdata_dir = util.appdata_dir()
-if not os.access(appdata_dir, os.W_OK):
-    appdata_dir = os.path.join(usr_share, "electrum-lite")
+#if not os.access(appdata_dir, os.W_OK):
+#    appdata_dir = os.path.join(usr_share, "electrum-lite")
 
 data_files += [
     (appdata_dir, ["data/README"]),
