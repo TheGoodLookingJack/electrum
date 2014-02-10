@@ -126,10 +126,6 @@ class Blockchain(threading.Thread):
             print_error("(verify) is_target_ok=", (int('0x'+_hash,16)<target))
             try:
                 assert prev_hash == header.get('prev_block_hash')
-                # Daniel Cagara: Note these two for now are uncommented, that is why we only use trusted servers.
-                # Target calculation is a bit more complicated in litecoin.
-                # bits - SHOULD BE CALCULATED CORRECTLY, just commented out for safety reasons
-                # target - WRONG VALUE CALCULATED, MAYBE SOMEONE CAN FIX THIS OF YOU GUYS!
                 assert bits == header.get('bits')
                 assert int('0x'+_hash,16) < target
             except Exception:
@@ -161,7 +157,6 @@ class Blockchain(threading.Thread):
             header = self.header_from_string(raw_header)
             _hash = self.hash_headerScrypt(header)
             assert previous_hash == header.get('prev_block_hash')
-            # Daniel Cagara: take out for now
             assert bits == header.get('bits')
             assert int('0x'+_hash,16) < target
 
@@ -197,7 +192,7 @@ class Blockchain(threading.Thread):
     def hash_headerScrypt(self, header):
         import ltc_scrypt
         return rev_hex(ltc_scrypt.getPoWHash(self.header_to_string(header).decode('hex')).encode('hex'))
-        
+
     def hash_header(self, header):
         return rev_hex(Hash(self.header_to_string(header).decode('hex')).encode('hex'))
 
@@ -265,11 +260,11 @@ class Blockchain(threading.Thread):
         max_target = 0x00000FFFF0000000000000000000000000000000000000000000000000000000
         if index == 0: return 0x1d00ffff, max_target
 
-        first = self.read_header((index-1)*2016-1) # hot fix done here by Daniel Cagara, seems like litecoin fucked up thing a bit
-        last = self.read_header(index*2016-1) # here was a -1 at end
+        first = self.read_header((index-1)*2016-1) # hot fix done here by Daniel Cagara
+        last = self.read_header(index*2016-1) 
         if last is None:
             for h in chain:
-                if h.get('block_height') == index*2016-1: # here was a -1 at end
+                if h.get('block_height') == index*2016-1: 
                     last = h
  
         nActualTimespan = last.get('timestamp') - first.get('timestamp')
